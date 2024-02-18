@@ -86,6 +86,8 @@ def get_objects_from_video(video_path):
             predicted_objects_image = get_objects_from_image(os.path.join(path, file))
             print(predicted_objects_image)
             predicted_objects.update(predicted_objects_image)
+        if os.path.isdir("video_frames"):
+            os.rmdir("video_frames")
         return list(predicted_objects)
     else:
         return "File does not exist"

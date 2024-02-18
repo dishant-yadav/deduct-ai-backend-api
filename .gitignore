@@ -2,3 +2,4 @@
 /video_frames
 /api/video_frames
 /media
+./db.sqlite3

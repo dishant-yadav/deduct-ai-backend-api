@@ -1,1 +1,4 @@
 .env
+/video_frames
+/api/video_frames
+/media

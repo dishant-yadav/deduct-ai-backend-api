@@ -6,15 +6,18 @@ from rest_framework.permissions import AllowAny
 from .models import Case
 from .serializers import CaseSerializer
 import random
-from django.http import JsonResponse
+from .utils import get_objects_from_video
+from django.core.files.storage import FileSystemStorage
 
-# import os
-# from django.conf import settings
+
+import os
+from django.conf import settings
+
 # Create your views here.
 
 
 def TestView(request):
-    return JsonResponse({"message": "This is a test view"}, status=HTTP_201_CREATED)
+    return Response({"message": "This is a test view"}, status=HTTP_201_CREATED)
 
 
 class FileUploadView(APIView):
@@ -25,10 +28,15 @@ class FileUploadView(APIView):
         video = request.FILES["video_recording"]
         random_no = str(random.randint(0, 100))
         case = Case.objects.create(name="Case " + random_no, video_recording=video)
-        caseSerializer = CaseSerializer(case)
-        print(video.file)
         case.save()
-        return Response(caseSerializer.data, status=HTTP_201_CREATED)
+        case_serializer = CaseSerializer(case)
+        file_path = "./media/" + str(case.video_recording)
+
+        objects = get_objects_from_video(file_path)
+        response_dict = case_serializer.data
+        response_dict.update({"objects": objects})
+        print("Final Objects", objects)
+        return Response(response_dict, status=HTTP_201_CREATED)
 
 
 class CaseViewSet(ModelViewSet):
@@ -38,3 +46,6 @@ class CaseViewSet(ModelViewSet):
     http_method_names = ["get", "list", "post", "patch"]
 
     # def create():
+
+
+# deduct_ai / media / cases / videos_recs / SIGNUPPAGE_cnsJOR2.webm

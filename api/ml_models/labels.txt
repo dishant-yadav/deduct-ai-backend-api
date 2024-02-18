@@ -1,0 +1,6 @@
+0 Dead-Body
+1 Knives
+2 Drugs
+3 Ropes
+4 Blood Stains
+5 Firearm

@@ -1,5 +1,6 @@
 .env
-/video_frames
-/api/video_frames
+/video_frames*
+/api/video_frames*
 /media
-./db.sqlite3
+db.sqlite3
+.vscode

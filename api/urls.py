@@ -16,7 +16,7 @@ from .views import (
 
 urlpatterns = [
     path("test", TestView.as_view()),
-    path("case_create", CreateCase.as_view()),
+    path("create_case/", CreateCase.as_view()),
     path("evidences/<uuid:pk>/", EvidencePrecautionProcedureView.as_view()),
     path("sections/<uuid:pk>/", CaseSectionView.as_view()),
     path("suspects/<uuid:pk>/", SuspectSupportingDocView.as_view()),

@@ -1,6 +1,13 @@
-from django.urls import path
-from .views import PrecautionsView
+from django.urls import path, include
+from .views import TestView, FileUploadView, CaseViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r"cases", CaseViewSet, basename="cases")
+
 
 urlpatterns = [
-    path("", PrecautionsView.as_view()),
+    path("test", TestView),
+    path("file", FileUploadView.as_view()),
+    path("", include(router.urls)),
 ]

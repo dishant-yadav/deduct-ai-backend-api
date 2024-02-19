@@ -17,8 +17,7 @@ class Case(models.Model):
         upload_to="cases/supporting_docs", blank=True, null=True
     )
     objects_list = models.JSONField(blank=True, null=True)
-    precaution_list = models.JSONField(blank=True, null=True)
-    procedure_list = models.JSONField(blank=True, null=True)
+    evdience_detail_list = models.JSONField(blank=True, null=True)
     section_list = models.JSONField(blank=True, null=True)
 
     # location = models.JSONField(blank=True)

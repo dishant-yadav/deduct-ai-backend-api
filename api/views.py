@@ -60,26 +60,23 @@ class EvidencePrecautionProcedureView(APIView):
         # print(resp_json)
         return resp_json["procedures"]["response"]
 
-    def get(self, request, pk):
+    def post(self, request, pk):
         case = self.get_object(pk)
         name = request.data["name"]
         objects = request.data["objects"]
 
-        precautions = []
-        procedures = []
+        evidence_details = []
 
         for object in objects:
             precaution = self.get_precaution(object)
-            precautions.append({"name": object, "precautions": precaution})
-
-        for object in objects:
             procedure = self.get_procedure(object)
-            procedures.append({"name": object, "procedures": procedure})
+            evidence_details.append(
+                {"name": object, "precautions": precaution, "procedures": procedure}
+            )
 
         case.name = name
         case.objects_list = objects
-        case.precaution_list = precautions
-        case.procedure_list = procedures
+        case.evdience_detail_list = evidence_details
         case.save()
         case_serializer = CaseSerializer(case)
 
@@ -102,7 +99,7 @@ class CaseSectionView(APIView):
         # print(resp_json)
         return resp_json["sections"]["response"]
 
-    def get(self, request, pk):
+    def post(self, request, pk):
         case = self.get_object(pk)
         notes = request.data["notes"]
         case.notes = notes
@@ -142,7 +139,7 @@ class SuspectSupportingDocView(APIView):
         except Case.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk):
+    def post(self, request, pk):
         case = self.get_object(pk)
         suspects = request.data["suspects"]
         if len(request.FILES):

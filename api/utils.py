@@ -29,12 +29,12 @@ def get_objects_from_image(image_path, threshold_value=0.5):
 
     # Load the model
     model = load_model(
-        "./api/ml_models/keras_model.h5",
+        "./static/ml_models/keras_model.h5",
         compile=False,
     )
 
     # Load the labels
-    class_names = open("./api/ml_models/labels.txt", "r").readlines()
+    class_names = open("./static/ml_models/labels.txt", "r").readlines()
     # class_names = ["Dead-Body", "Knives", "Drugs", "Ropes", "Blood Stains", "Firearm"]
 
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)

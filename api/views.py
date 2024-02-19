@@ -1,12 +1,11 @@
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
-from rest_framework.permissions import AllowAny
 from .models import Case
 from .serializers import CaseSerializer
 from .utils import get_objects_from_video
 from django.http import Http404
+from .utils import get_results_from_query
 import requests
 
 
@@ -44,22 +43,6 @@ class EvidencePrecautionProcedureView(APIView):
         except Case.DoesNotExist:
             raise Http404
 
-    def get_precaution(self, query):
-        BASE_URL = f"http://localhost:5000/api/precautions/{query}"
-        print("Precaution API Call for", query)
-        resp = requests.get(BASE_URL)
-        resp_json = resp.json()
-        # print(resp_json)
-        return resp_json["precautions"]["response"]
-
-    def get_procedure(self, query):
-        BASE_URL = f"http://localhost:5000/api/procedures/{query}"
-        print("Procedure API Call for", query)
-        resp = requests.get(BASE_URL)
-        resp_json = resp.json()
-        # print(resp_json)
-        return resp_json["procedures"]["response"]
-
     def post(self, request, pk):
         case = self.get_object(pk)
         name = request.data["name"]
@@ -68,8 +51,8 @@ class EvidencePrecautionProcedureView(APIView):
         evidence_details = []
 
         for object in objects:
-            precaution = self.get_precaution(object)
-            procedure = self.get_procedure(object)
+            precaution = get_results_from_query("precautions", object)
+            procedure = get_results_from_query("procedures", object)
             evidence_details.append(
                 {"name": object, "precautions": precaution, "procedures": procedure}
             )
@@ -91,14 +74,6 @@ class CaseSectionView(APIView):
         except Case.DoesNotExist:
             raise Http404
 
-    def get_section(self, query):
-        BASE_URL = f"http://localhost:5000/api/sections/{query}"
-        print("Section API Call for", query)
-        resp = requests.get(BASE_URL)
-        resp_json = resp.json()
-        # print(resp_json)
-        return resp_json["sections"]["response"]
-
     def post(self, request, pk):
         case = self.get_object(pk)
         notes = request.data["notes"]
@@ -115,7 +90,7 @@ class CaseSectionView(APIView):
                 else:
                     query_string += " and " + objects[i]
 
-        sections = self.get_section(query_string)
+        sections = get_results_from_query("sections", query_string)
 
         # to fetch sections for individual object
         # for object in objects:
@@ -142,6 +117,8 @@ class SuspectSupportingDocView(APIView):
     def post(self, request, pk):
         case = self.get_object(pk)
         suspects = request.data["suspects"]
+        suspects = request.data["section_list"]
+        # sections save in section list with formatting
         if len(request.FILES):
             docs = request.FILES["supporting_docs"]
             case.supporting_docs = docs

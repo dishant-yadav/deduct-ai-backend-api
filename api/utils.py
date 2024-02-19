@@ -3,6 +3,7 @@ from PIL import Image, ImageOps
 import numpy as np
 import cv2
 import os
+import requests
 
 
 def extract_images(input_path, output_path="video_frames"):
@@ -77,7 +78,7 @@ def get_objects_from_image(image_path, threshold_value=0.5):
 
 def get_objects_from_video(video_path):
     if os.path.isfile(video_path):
-        # extract_images(video_path)
+        extract_images(video_path)
         path = os.path.join("video_frames")
         file_list = os.listdir(path)
         print(file_list, "Length", len(file_list))
@@ -98,5 +99,34 @@ def get_objects_from_video(video_path):
 
 # print(get_objects_from_video("./../static/video.mp4"))
 
-
 # get_objects_from_image("image1.jpeg")
+
+
+def get_results_from_query(action, query):
+    try:
+        BASE_URL = f"http://localhost:5000/api/{action}/{query}"
+        print(f"{action.title()} API Call for", query)
+        resp = requests.get(BASE_URL)
+        resp.raise_for_status()
+
+        resp_json = resp.json()
+
+        print(resp_json)
+
+        if "sections" in resp_json and "response" in resp_json["sections"]:
+            return resp_json["sections"]["response"]
+        else:
+            print("Error : Unexpected response structure from the server.")
+            return "Error"
+    except requests.exceptions.RequestException as e:
+        # Handle connection errors, timeouts, and other request-related issues
+
+        print(f"Error : Request failed due to {type(e).__name__}")
+        return "Error"
+    except ValueError:
+        # Handle JSON decoding errors
+        print("Error : Failed to decode JSON response")
+        return "Error"
+
+
+print(get_results_from_query("procedures", "firearms"))

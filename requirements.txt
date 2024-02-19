@@ -3,7 +3,6 @@ aiohttp==3.9.3
 aiosignal==1.3.1
 annotated-types==0.5.0
 anyio==4.2.0
-apturl==0.5.2
 asgiref==3.7.2
 async-timeout==4.0.3
 attrs==23.2.0
@@ -11,18 +10,14 @@ backports.zoneinfo==0.2.1
 bcrypt==3.1.7
 beautifulsoup4==4.12.3
 blinker==1.4
-Brlapi==0.7.0
 bs4==0.0.2
 cachetools==4.0.0
 certifi==2024.2.2
 chardet==3.0.4
 charset-normalizer==3.3.2
-chrome-gnome-shell==0.0.0
 click==8.1.7
 colorama==0.4.3
-command-not-found==0.3
 cryptography==2.8
-cupshelpers==1.0
 dataclasses-json==0.6.4
 dbus-python==1.2.16
 defer==1.0.6
@@ -30,8 +25,6 @@ demjson==2.2.4
 Deprecated==1.2.14
 dirtyjson==1.0.8
 distlib==0.3.7
-distro==1.9.0
-distro-info==0.23+ubuntu1.1
 Django==4.2.5
 django-livereload-server==0.4
 djangorestframework==3.14.0
@@ -105,18 +98,6 @@ pillow==10.2.0
 Pint==0.17
 platformdirs==3.10.0
 protobuf==3.6.1
-proton-core==0.1.16
-proton-keyring-linux==0.0.1
-proton-keyring-linux-secretservice==0.0.1
-proton-vpn-api-core==0.20.2
-proton-vpn-connection==0.11.0
-proton-vpn-gtk-app==4.1.3
-proton-vpn-killswitch==0.2.0
-proton-vpn-killswitch-network-manager==0.2.0
-proton-vpn-logger==0.2.1
-proton-vpn-network-manager==0.3.0
-proton-vpn-network-manager-openvpn==0.0.4
-proton-vpn-session==0.6.4
 psutil==5.5.1
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
@@ -170,7 +151,6 @@ tqdm==4.66.2
 typing-inspect==0.9.0
 # typing_extensions==4.9.0
 tzdata==2024.1
-ubuntu-drivers-common==0.0.0
 ufw==0.36
 ulauncher==5.14.0
 unattended-upgrades==0.1
@@ -187,6 +167,3 @@ wrapt==1.16.0
 xkit==0.0.0
 yarl==1.9.4
 zipp==1.0.0
-zorin-appearance==4.1
-zorin-connect==1.2
-zorin-exec-guard==1.5

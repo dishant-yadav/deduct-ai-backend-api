@@ -59,7 +59,7 @@ class EvidencePrecautionProcedureView(APIView):
 
         case.name = name
         case.objects_list = objects
-        case.evdience_detail_list = evidence_details
+        case.evidence_detail_list = evidence_details
         case.save()
         case_serializer = CaseSerializer(case)
 

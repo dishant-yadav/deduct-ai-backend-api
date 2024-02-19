@@ -19,7 +19,7 @@ def extract_images(input_path, output_path="video_frames"):
         else:
             cv2.imwrite(
                 output_path + "/frame%d.jpg" % count, image
-            )  # save frame as JPEG file
+            )  # save frame as JPG file
             success, image = vid_cap.read()
             print("Read a new frame: ", success)
             count += 1
@@ -86,7 +86,7 @@ def get_objects_from_video(video_path):
         for file in file_list:
             image_path = os.path.join(path, file)
             predicted_objects_image = get_objects_from_image(image_path)
-            print(predicted_objects_image)
+            print("Predicted Object(s)", predicted_objects_image)
             predicted_objects.update(predicted_objects_image)
             os.remove(image_path)
 
@@ -111,10 +111,10 @@ def get_results_from_query(action, query):
 
         resp_json = resp.json()
 
-        print(resp_json)
+        # print(resp_json)
 
-        if "sections" in resp_json and "response" in resp_json["sections"]:
-            return resp_json["sections"]["response"]
+        if action in resp_json and "response" in resp_json[action]:
+            return resp_json[action]["response"]
         else:
             print("Error : Unexpected response structure from the server.")
             return "Error"
@@ -129,4 +129,4 @@ def get_results_from_query(action, query):
         return "Error"
 
 
-print(get_results_from_query("procedures", "firearms"))
+# print(get_results_from_query("procedures", "firearms"))

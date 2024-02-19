@@ -107,12 +107,23 @@ class CaseSectionView(APIView):
         notes = request.data["notes"]
         case.notes = notes
         objects = case.objects_list
+        objects_len = len(objects)
+        query_string = ""
+        if objects_len == 1:
+            query_string = objects[0]
+        else:
+            for i in range(objects_len):
+                if i != len(objects) - 1:
+                    query_string += objects[i]
+                else:
+                    query_string += " and " + objects[i]
 
-        sections = []
+        sections = self.get_section(query_string)
 
-        for object in objects:
-            section = self.get_section(object)
-            sections.append({"name": object, "sections": section})
+        # to fetch sections for individual object
+        # for object in objects:
+        #     section = self.get_section(object)
+        #     sections.append({"name": object, "sections": section})
 
         case.section_list = sections
 

@@ -104,7 +104,8 @@ def get_objects_from_video(video_path):
 
 def get_results_from_query(action, query):
     try:
-        BASE_URL = f"http://localhost:5000/api/{action}/{query}"
+        # BASE_URL = f"http://localhost:5000/api/{action}/{query}"
+        BASE_URL = f"http://13.51.231.248:5000/api/{action}/{query}"
         print(f"{action.title()} API Call for", query)
         resp = requests.get(BASE_URL)
         resp.raise_for_status()
@@ -129,4 +130,4 @@ def get_results_from_query(action, query):
         return "Error"
 
 
-# print(get_results_from_query("procedures", "firearms"))
+print(get_results_from_query("procedures", "firearms"))

@@ -118,7 +118,7 @@ class SuspectSupportingDocView(APIView):
     def post(self, request, pk):
         case = self.get_object(pk)
         suspects = request.data["suspects"]
-        suspects = request.data["section_list"]
+        sections = request.data["section_list"]
         # sections save in section list with formatting
         if len(request.FILES):
             docs = request.FILES["supporting_docs"]

@@ -120,10 +120,9 @@ def get_objects_from_video(video_path, frames_path="video_frames"):
                     f"Predicted Object(s) for frame {counter} : {predicted_objects_image}"
                 )
                 os.remove(image_path)
+                res = elem_added(predicted_objects, predicted_objects_image)
                 if files_len > 20:
-                    if not elem_added(predicted_objects, predicted_objects_image) and (
-                        counter > 6
-                    ):
+                    if not res and (counter > 6):
                         break
                     else:
                         continue

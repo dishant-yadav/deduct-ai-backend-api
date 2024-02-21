@@ -6,8 +6,26 @@ import os
 import requests
 
 
+def remove_dir(dir="video_frames"):
+    if os.path.isdir(dir):
+        path = os.path.join(dir)
+        file_list = os.listdir(path)
+        print(file_list, "Length", len(file_list))
+        counter = 0
+        for file in file_list:
+            counter += 1
+            image_path = os.path.join(path, file)
+            print(f"Removing file {counter} ({file})")
+            os.remove(image_path)
+        os.rmdir(dir)
+        print(f"Deleted Folder : '{dir}'")
+    else:
+        print(f"Folder '{dir}' does not exist")
+
+
 def extract_images(input_path, output_path="video_frames"):
 
+    # remove_dir(output_path)
     os.makedirs(output_path, exist_ok=True)
     vid_cap = cv2.VideoCapture(input_path)
     success, image = vid_cap.read()
@@ -17,12 +35,12 @@ def extract_images(input_path, output_path="video_frames"):
         if not success:
             break
         else:
+            count += 1
             cv2.imwrite(
                 output_path + "/frame%d.jpg" % count, image
             )  # save frame as JPG file
             success, image = vid_cap.read()
-            print("Read a new frame: ", success)
-            count += 1
+            print(f"Read a new frame ({count}) : {success}")
 
 
 def get_objects_from_image(image_path, threshold_value=0.5):
@@ -76,28 +94,55 @@ def get_objects_from_image(image_path, threshold_value=0.5):
     return predicted_objects
 
 
-def get_objects_from_video(video_path):
-    if os.path.isfile(video_path):
-        extract_images(video_path)
-        path = os.path.join("video_frames")
-        file_list = os.listdir(path)
-        print(file_list, "Length", len(file_list))
-        predicted_objects = set()
-        for file in file_list:
-            image_path = os.path.join(path, file)
-            predicted_objects_image = get_objects_from_image(image_path)
-            print("Predicted Object(s)", predicted_objects_image)
-            predicted_objects.update(predicted_objects_image)
-            os.remove(image_path)
+def elem_added(set: set, elem: str):
+    prev_len = len(set)
+    set.update(elem)
+    return len(set) != prev_len
 
-        if os.path.isdir("video_frames"):
-            os.rmdir("video_frames")
-        return list(predicted_objects)
+
+def get_objects_from_video(video_path, frames_path="video_frames"):
+    if os.path.isfile(video_path):
+        try:
+            extract_images(video_path, frames_path)
+            path = os.path.join(frames_path)
+            file_list = os.listdir(path)
+            files_len = len(file_list)
+            print(file_list)
+            print("Total Frames", files_len)
+            predicted_objects = set()
+
+            counter = 0
+            for file in file_list:
+                counter += 1
+                image_path = os.path.join(path, file)
+                predicted_objects_image = get_objects_from_image(image_path)
+                print(
+                    f"Predicted Object(s) for frame {counter} : {predicted_objects_image}"
+                )
+                os.remove(image_path)
+                if files_len > 20:
+                    if not elem_added(predicted_objects, predicted_objects_image) and (
+                        counter > 6
+                    ):
+                        break
+                    else:
+                        continue
+                # predicted_objects.update(predicted_objects_image)
+
+            # if os.path.isdir(frames_path):
+            #     os.rmdir(frames_path)
+            # remove_dir(frames_path)
+            return list(predicted_objects)
+        except KeyboardInterrupt:
+            print("Server Terminated by user")
+        finally:
+            remove_dir(frames_path)
+
     else:
         return "File does not exist"
 
 
-# print(get_objects_from_video("./../static/video.mp4"))
+# print(get_objects_from_video("./../static/video.mp4", "video_frames"))
 
 # get_objects_from_image("image1.jpeg")
 
@@ -106,7 +151,7 @@ def get_results_from_query(action, query):
     try:
         # BASE_URL = f"http://localhost:5000/api/{action}/{query}"
         BASE_URL = f"http://13.51.231.248:5000/api/{action}/{query}"
-        print(f"{action.title()} API Call for", query)
+        print(f"{action.title()} API Call for {query}")
         resp = requests.get(BASE_URL)
         resp.raise_for_status()
 
@@ -130,4 +175,4 @@ def get_results_from_query(action, query):
         return "Error"
 
 
-print(get_results_from_query("procedures", "firearms"))
+# print(get_results_from_query("procedures", "firearms"))

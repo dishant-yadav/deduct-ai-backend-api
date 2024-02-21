@@ -6,8 +6,6 @@ from .serializers import CaseSerializer
 from .utils import get_objects_from_video
 from django.http import Http404
 from .utils import get_results_from_query
-import requests
-
 
 # Create your views here.
 
@@ -25,7 +23,10 @@ class CreateCase(APIView):
         case = Case.objects.create(video_recording=video)
 
         file_path = "./media/" + str(case.video_recording)
-        objects = get_objects_from_video(file_path)
+        from django.utils.crypto import get_random_string
+
+        frames_path = f"video_frames_{get_random_string(10)}"
+        objects = get_objects_from_video(file_path, frames_path)
         case.objects_list = objects
 
         case.save()
